@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDM.Compulsory.Core", "SDM.Compulsory.Core\SDM.Compulsory.Core.csproj", "{874FD1B0-F3D8-4ADA-9EB2-60A8DFD3F340}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDM.Compulsory.Test.xUnit", "SDM.Compulsory.Test.xUnit\SDM.Compulsory.Test.xUnit.csproj", "{253C8832-F565-4388-B551-08C8F1B90D04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDM.Compulsory.Domain", "SDM.Compulsory.Domain\SDM.Compulsory.Domain.csproj", "{8767D8B9-BA9C-4B74-8627-027E70C6CDF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{874FD1B0-F3D8-4ADA-9EB2-60A8DFD3F340}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{874FD1B0-F3D8-4ADA-9EB2-60A8DFD3F340}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{874FD1B0-F3D8-4ADA-9EB2-60A8DFD3F340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253C8832-F565-4388-B551-08C8F1B90D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253C8832-F565-4388-B551-08C8F1B90D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253C8832-F565-4388-B551-08C8F1B90D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253C8832-F565-4388-B551-08C8F1B90D04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8767D8B9-BA9C-4B74-8627-027E70C6CDF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8767D8B9-BA9C-4B74-8627-027E70C6CDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8767D8B9-BA9C-4B74-8627-027E70C6CDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8767D8B9-BA9C-4B74-8627-027E70C6CDF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
