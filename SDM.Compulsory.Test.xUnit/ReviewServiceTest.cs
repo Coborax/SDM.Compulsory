@@ -116,10 +116,10 @@ namespace SDM.Compulsory.Test.xUnit
         }
 
         [Theory]
-        [InlineData(1, 11.0/ 3.0)]
+        [InlineData(1, 11.0/3.0)]
         [InlineData(2, 6.0/3.0)]
         [InlineData(3, 8.0/2.0)]
-        [InlineData(4, 0)]
+        [InlineData(4, 0.0)]
         public void GetAverageRateFromReviewerTest(int id, double expected)
         {
             IReviewRepository repo = _mockRepo.Object;
