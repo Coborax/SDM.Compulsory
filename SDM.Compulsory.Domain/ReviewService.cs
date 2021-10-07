@@ -76,37 +76,72 @@ namespace SDM.Compulsory.Domain
         /// <inheritdoc/>
         public int GetNumberOfRates(int movie, int rate)
         {
-            throw new NotImplementedException();
+            List<Review> results = _repository.GetAll().Where(x => x.Movie == movie && x.Grade == rate).ToList();
+            return results.Count;
         }
 
         /// <inheritdoc/>
         public List<int> GetMoviesWithHighestNumberOfTopRates()
         {
-            throw new NotImplementedException();
+            return _repository.GetAll()
+                .Where(x => x.Grade == 5)
+                .Select(x => x.Movie)
+                .ToList();
         }
         
         /// <inheritdoc/>
         public List<int> GetMostProductiveReviewers()
         {
-            throw new NotImplementedException();
+            List<Review> result = _repository.GetAll();
+            Dictionary<int, int> reviewCount = new Dictionary<int, int>();
+
+            foreach (var review in result)
+            {
+                if (!reviewCount.ContainsKey(review.Reviewer))
+                    reviewCount[review.Reviewer] = 1;
+                else
+                    reviewCount[review.Reviewer] += 1;
+            }
+
+            return reviewCount.ToList()
+                .OrderByDescending(x => x.Value)
+                .Select(x => x.Key)
+                .ToList();
         }
         
         /// <inheritdoc/>
         public List<int> GetTopRatedMovies(int amount)
         {
-            throw new NotImplementedException();
+            List<int> movies = new List<int>();
+            foreach (var review in _repository.GetAll())
+            {
+                if (!movies.Contains(review.Movie))
+                        movies.Add(review.Movie);
+            }
+
+            return movies
+                .OrderByDescending(GetAverageRateOfMovie)
+                .Take(amount)
+                .ToList();
         }
         
         /// <inheritdoc/>
         public List<int> GetTopMoviesByReviewer(int reviewer)
         {
-            throw new NotImplementedException();
+            return _repository.GetAll()
+                .Where(x => x.Reviewer == reviewer)
+                .OrderByDescending(x => GetAverageRateOfMovie(x.Movie))
+                .Select(x => x.Movie)
+                .ToList();
         }
         
         /// <inheritdoc/>
         public List<int> GetReviewersByMovie(int movie)
         {
-            throw new NotImplementedException();
+            return _repository.GetAll()
+                .Where(x => x.Movie == movie)
+                .Select(x => x.Reviewer)
+                .ToList();
         }
     }
 }

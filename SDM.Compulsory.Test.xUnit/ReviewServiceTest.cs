@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Moq;
 using SDM.Compulsory.Core;
@@ -67,6 +68,25 @@ namespace SDM.Compulsory.Test.xUnit
             // Reviewer ID: 3
             repo.Add(new Review {Id = 7, Reviewer = 3, Movie = 1, Grade = 5, ReviewDate = DateTime.Now});
             repo.Add(new Review {Id = 8, Reviewer = 3, Movie = 5, Grade = 3, ReviewDate = DateTime.Now});
+            
+        }
+        
+        private void SetupDataWithTopRate(IReviewRepository repo)
+        {
+            // Reviewer ID: 1
+            repo.Add(new Review {Id = 1, Reviewer = 1, Movie = 1, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 2, Reviewer = 1, Movie = 2, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 3, Reviewer = 1, Movie = 3, Grade = 5, ReviewDate = DateTime.Now});
+            
+            // Reviewer ID: 2
+            repo.Add(new Review {Id = 4, Reviewer = 2, Movie = 4, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 5, Reviewer = 2, Movie = 2, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 6, Reviewer = 2, Movie = 3, Grade = 2, ReviewDate = DateTime.Now});
+            
+            // Reviewer ID: 3
+            repo.Add(new Review {Id = 7, Reviewer = 3, Movie = 1, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 8, Reviewer = 3, Movie = 5, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 9, Reviewer = 3, Movie = 3, Grade = 5, ReviewDate = DateTime.Now});
             
         }
         
@@ -157,6 +177,105 @@ namespace SDM.Compulsory.Test.xUnit
             
             Assert.Equal(expected, result);
         }
-        
+
+        [Theory]
+        [InlineData(1, 2, 0)]
+        [InlineData(2, 3, 1)]
+        [InlineData(3, 4, 1)]
+        public void GetNumberOfRatesTest(int movie, int rate, int expected)
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithDuplicateGrades(repo);
+
+            double result = reviewService.GetNumberOfRates(movie, rate);
+            
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void GetMoviesWithHighestNumberOfTopRatesTest()
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithTopRate(repo);
+
+            List<int> expectedResult = _reviews.Values
+                .Where(x => x.Grade == 5)
+                .Select(x => x.Movie)
+                .ToList();
+
+            List<int> result = reviewService.GetMoviesWithHighestNumberOfTopRates();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void GetMostProductiveReviewersTest()
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithDuplicateGrades(repo);
+
+            List<int> expectedResult = new List<int> { 1, 2, 3 };
+            List<int> result = reviewService.GetMostProductiveReviewers();
+            
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [InlineData(5, new[] {1, 3, 5, 2, 4})]
+        [InlineData(4, new[] {1, 3, 5, 2})]
+        [InlineData(1,new[] {1})]
+        public void GetTopRatedMoviesTest(int amount, int[] expectedResult)
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithDuplicateGrades(repo);
+
+            List<int> result = reviewService.GetTopRatedMovies(amount);
+
+            Assert.Equal(new List<int>(expectedResult), result);
+        }
+
+        [Theory]
+        [InlineData(1, new[] {1, 3, 2})]
+        [InlineData(2, new[] {3, 2, 4})]
+        [InlineData(3, new[] {1, 5})]
+        [InlineData(4, new int[0])]
+        public void GetTopMoviesByReviewerTest(int reviewer, int[] expectedResult)
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithDuplicateGrades(repo);
+            
+            List<int> result = reviewService.GetTopMoviesByReviewer(reviewer);
+
+            Assert.Equal(new List<int>(expectedResult), result);
+        }
+
+        [Theory]
+        [InlineData(1, new[] {1, 3})]
+        [InlineData(2, new[] {1, 2})]
+        [InlineData(3, new[] {1, 2})]
+        [InlineData(4, new[] {2})]
+        [InlineData(5, new[] {3})]
+        public void GetReviewersByMovieTest(int movie, int[] expectedResult)
+        {
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            
+            SetupDataWithDuplicateGrades(repo);
+            
+            List<int> result = reviewService.GetReviewersByMovie(movie);
+            
+            Assert.Equal(new List<int>(expectedResult), result);
+        }
+
     }
 }
