@@ -202,10 +202,7 @@ namespace SDM.Compulsory.Test.xUnit
             
             SetupDataWithTopRate(repo);
 
-            List<int> expectedResult = _reviews.Values
-                .Where(x => x.Grade == 5)
-                .Select(x => x.Movie)
-                .ToList();
+            List<int> expectedResult = new List<int> { 3, 1, 2, 4, 5 };
 
             List<int> result = reviewService.GetMoviesWithHighestNumberOfTopRates();
 

@@ -83,9 +83,20 @@ namespace SDM.Compulsory.Domain
         /// <inheritdoc/>
         public List<int> GetMoviesWithHighestNumberOfTopRates()
         {
-            return _repository.GetAll()
-                .Where(x => x.Grade == 5)
-                .Select(x => x.Movie)
+            List<Review> result = _repository.GetAll();
+            Dictionary<int, int> movieCount = new Dictionary<int, int>();
+
+            foreach (var review in result)
+            {
+                if (!movieCount.ContainsKey(review.Movie))
+                    movieCount[review.Movie] = 1;
+                else
+                    movieCount[review.Movie] += 1;
+            }
+
+            return movieCount.ToList()
+                .OrderByDescending(x => x.Value)
+                .Select(x => x.Key)
                 .ToList();
         }
         
