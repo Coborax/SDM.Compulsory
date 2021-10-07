@@ -74,20 +74,25 @@ namespace SDM.Compulsory.Test.xUnit
         private void SetupDataWithTopRate(IReviewRepository repo)
         {
             // Reviewer ID: 1
-            repo.Add(new Review {Id = 1, Reviewer = 1, Movie = 1, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 1, Reviewer = 1, Movie = 1, Grade = 4, ReviewDate = DateTime.Now});
             repo.Add(new Review {Id = 2, Reviewer = 1, Movie = 2, Grade = 5, ReviewDate = DateTime.Now});
             repo.Add(new Review {Id = 3, Reviewer = 1, Movie = 3, Grade = 5, ReviewDate = DateTime.Now});
             
             // Reviewer ID: 2
-            repo.Add(new Review {Id = 4, Reviewer = 2, Movie = 4, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 4, Reviewer = 2, Movie = 4, Grade = 3, ReviewDate = DateTime.Now});
             repo.Add(new Review {Id = 5, Reviewer = 2, Movie = 2, Grade = 5, ReviewDate = DateTime.Now});
-            repo.Add(new Review {Id = 6, Reviewer = 2, Movie = 3, Grade = 2, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 6, Reviewer = 2, Movie = 3, Grade = 5, ReviewDate = DateTime.Now});
             
             // Reviewer ID: 3
             repo.Add(new Review {Id = 7, Reviewer = 3, Movie = 1, Grade = 5, ReviewDate = DateTime.Now});
-            repo.Add(new Review {Id = 8, Reviewer = 3, Movie = 5, Grade = 5, ReviewDate = DateTime.Now});
+            repo.Add(new Review {Id = 8, Reviewer = 3, Movie = 5, Grade = 3, ReviewDate = DateTime.Now});
             repo.Add(new Review {Id = 9, Reviewer = 3, Movie = 3, Grade = 5, ReviewDate = DateTime.Now});
             
+        }
+
+        private void SetupDataEmpty(IReviewRepository repo)
+        {
+            // *Cricket sound*
         }
         
         [Theory]
@@ -111,16 +116,16 @@ namespace SDM.Compulsory.Test.xUnit
         }
 
         [Theory]
-        [InlineData(1, 8/3.0)]
-        [InlineData(2, 6/2)]
-        [InlineData(3, 5/1)]
+        [InlineData(1, 11.0/ 3.0)]
+        [InlineData(2, 6.0/3.0)]
+        [InlineData(3, 8.0/2.0)]
         [InlineData(4, 0)]
         public void GetAverageRateFromReviewerTest(int id, double expected)
         {
             IReviewRepository repo = _mockRepo.Object;
             IReviewService reviewService = new ReviewService(repo);
             
-            SetupData(repo);
+            SetupDataWithDuplicateGrades(repo);
             
             double result = reviewService.GetAverageRateFromReviewer(id);
             
@@ -197,15 +202,34 @@ namespace SDM.Compulsory.Test.xUnit
         [Fact]
         public void GetMoviesWithHighestNumberOfTopRatesTest()
         {
+            // Arrange
+            IReviewRepository repo = _mockRepo.Object;
+            IReviewService reviewService = new ReviewService(repo);
+            SetupDataWithTopRate(repo);
+            List<int> expectedResult = new List<int> { 3, 2, 1};
+            
+            // Act
+            List<int> result = reviewService.GetMoviesWithHighestNumberOfTopRates();
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void GetMoviesWithHighestNumberOfTopRatesEmptyTest()
+        {
+            // Arrange
             IReviewRepository repo = _mockRepo.Object;
             IReviewService reviewService = new ReviewService(repo);
             
-            SetupDataWithTopRate(repo);
-
-            List<int> expectedResult = new List<int> { 3, 1, 2, 4, 5 };
-
+            SetupDataEmpty(repo);
+            
+            List<int> expectedResult = new List<int> {Capacity = 0};
+            
+            // Act
             List<int> result = reviewService.GetMoviesWithHighestNumberOfTopRates();
 
+            // Assert
             Assert.Equal(expectedResult, result);
         }
 

@@ -27,14 +27,14 @@ namespace SDM.Compulsory.Domain
 
             if (results.Count == 0)
                 return 0;
-
-            double gradeAvg = 0;
+            
+            double movieAvgGrade = 0.0;
             foreach (var review in results)
             {
-                gradeAvg += review.Grade;
+                movieAvgGrade += review.Grade;
             }
-
-            return gradeAvg / results.Count;
+            
+            return  movieAvgGrade/Convert.ToDouble(results.Count);
         }
  
         /// <inheritdoc/>
@@ -63,14 +63,13 @@ namespace SDM.Compulsory.Domain
             if (results.Count == 0)
                 return 0;
             
-            double movieAvgGrade = 0;
+            double movieAvgGrade = 0.0;
             foreach (var review in results)
             {
                 movieAvgGrade += review.Grade;
             }
             
-            return movieAvgGrade/results.Count;
-            
+            return  movieAvgGrade/Convert.ToDouble(results.Count);
         }
         
         /// <inheritdoc/>
@@ -83,7 +82,12 @@ namespace SDM.Compulsory.Domain
         /// <inheritdoc/>
         public List<int> GetMoviesWithHighestNumberOfTopRates()
         {
-            List<Review> result = _repository.GetAll();
+            List<Review> result = _repository.GetAll()
+                .Where(x => x.Grade == 5).ToList();
+            
+            if (result.Count == 0)
+                return new List<int>();
+            
             Dictionary<int, int> movieCount = new Dictionary<int, int>();
 
             foreach (var review in result)
@@ -94,7 +98,7 @@ namespace SDM.Compulsory.Domain
                     movieCount[review.Movie] += 1;
             }
 
-            return movieCount.ToList()
+            return movieCount
                 .OrderByDescending(x => x.Value)
                 .Select(x => x.Key)
                 .ToList();
@@ -114,7 +118,7 @@ namespace SDM.Compulsory.Domain
                     reviewCount[review.Reviewer] += 1;
             }
 
-            return reviewCount.ToList()
+            return reviewCount
                 .OrderByDescending(x => x.Value)
                 .Select(x => x.Key)
                 .ToList();
