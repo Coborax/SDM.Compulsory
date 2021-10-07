@@ -40,7 +40,9 @@ namespace SDM.Compulsory.Domain
         /// <inheritdoc/>
         public int GetNumberOfRatesByReviewer(int reviewer, int rate)
         {
-            List<Review> results = _repository.GetAll().Where(x => x.Reviewer == reviewer && x.Grade == rate).ToList();
+            List<Review> results = _repository
+                .GetAll()
+                .Where(x => x.Reviewer == reviewer && x.Grade == rate).ToList();
             return results.Count;
         }
         
